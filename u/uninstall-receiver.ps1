@@ -1,6 +1,8 @@
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 $ErrorActionPreference = "Stop"
 Write-Host -NoNewline "> Uninstalling Receiver... "
+$installDir = "C:\ProgramData\Heads\Receiver"
+
 $serviceName = 'Heads Receiver'
 $existingService = Get-Service $serviceName -ErrorAction SilentlyContinue
 if ($existingService) {
@@ -10,5 +12,6 @@ if ($existingService) {
     }
     $out = sc.exe delete $serviceName
 }
-rm -r "C:\ProgramData\Heads\Receiver"
-Write-Host "Done!"
+$exists = Test-Path $installDir
+rm -r $installDir -ErrorAction SilentlyContinue
+Write-Host $exists ? "Done!" : "No installation found"

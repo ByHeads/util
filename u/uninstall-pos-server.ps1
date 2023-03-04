@@ -1,6 +1,8 @@
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 $ErrorActionPreference = "Stop"
 Write-Host -NoNewline "> Uninstalling POS-Server... "
+$installDir = "C:\ProgramData\Heads\POSServer"
+
 $serviceName = 'Heads POS Server'
 $existingService = Get-Service $serviceName -ErrorAction SilentlyContinue
 if ($existingService) {
@@ -20,5 +22,6 @@ ForEach ($name in @("scdbs", "scdbc", "scsql", "scpmm", "scweaver")) {
     }
 }
 if ($wait) { Start-Sleep -Seconds 4 }
-rm -r "C:\ProgramData\Heads\POSServer"
-Write-Host "Done!"
+$exists = Test-Path $installDir
+rm -r $installDir -ErrorAction SilentlyContinue
+Write-Host $exists ? "Done!" : "No installation found"
