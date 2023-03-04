@@ -14,4 +14,4 @@ if ($existingService) {
 }
 $exists = Test-Path $installDir
 rm -r $installDir -ErrorAction SilentlyContinue
-Write-Host $exists ? "Done!" : "No installation found"
+Write-Host ($exists ? "Done!" : "No installation found")

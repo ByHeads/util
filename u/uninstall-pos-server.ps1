@@ -24,4 +24,5 @@ ForEach ($name in @("scdbs", "scdbc", "scsql", "scpmm", "scweaver")) {
 if ($wait) { Start-Sleep -Seconds 4 }
 $exists = Test-Path $installDir
 rm -r $installDir -ErrorAction SilentlyContinue
-Write-Host $exists ? "Done!" : "No installation found"
+$exists = Test-Path $installDir
+Write-Host ($exists ? "Done!" : "No installation found")
