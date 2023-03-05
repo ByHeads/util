@@ -1,3 +1,4 @@
+#Requires -RunAsAdministrator
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     # Upgrade to PowerShell 7
     $coreVersion = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\*" -Name "SemanticVersion" -ErrorAction SilentlyContinue
