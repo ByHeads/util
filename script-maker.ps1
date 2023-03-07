@@ -34,12 +34,15 @@ function Collation
 }
 
 Write-Host ""
-Write-Host "> This tool will help create a Broadcaster install script!" -ForegroundColor Green
-$environment = Read-Host "> Enter environment name, e.g. fynda or fynda-test"
-$token = Read-Host "> Enter install token" -MaskInput
+Write-Host "This tool will help create a Broadcaster install script!" -ForegroundColor Green
+Write-Host -NoNewline "To quit at any time, press "
+Write-Host -ForegroundColor:Yellow "Ctrl+C"
+Write-Host ""
+$environment = Read-Host "> First enter the environment name, e.g. fynda or fynda-test"
+$token = Read-Host "> Now enter the install token" -MaskInput
 $baseUrl = "https://broadcaster.$environment.heads-api.com/api/install"
 
-if (Yes "Should we first uninstall all existing client software?") {
+if (Yes "Should we first uninstall existing client software?") {
     $script += "irm raw.githubusercontent.com/byheads/util/main/u/all | iex"
     $script += [Environment]::NewLine
 }
@@ -69,3 +72,4 @@ Write-Host "# Here's your script. Run it in PowerShell as administrator on a cli
 Write-Host ""
 Write-Host $script
 Write-Host "# End of script"
+Write-Host ""
