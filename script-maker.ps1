@@ -1,4 +1,4 @@
-$script = ""
+$script = @()
 
 function Yes
 {
@@ -7,6 +7,8 @@ function Yes
     $val = $val.Trim();
     if ($val -eq "yes") { return $true }
     if ($val -eq "no") { return $false }
+    if ($val -eq "y") { return $true }
+    if ($val -eq "n") { return $false }
     Write-Host "Invalid value, expected yes or no"
     return Yes $message
 }
@@ -44,18 +46,15 @@ $baseUrl = "https://broadcaster.$environment.heads-api.com/api/install"
 
 if (Yes "Should we first uninstall existing client software?") {
     $script += "irm raw.githubusercontent.com/byheads/util/main/u/all | iex"
-    $script += [Environment]::NewLine
 }
 if (Yes "Install Receiver?") {
     $script += "irm `"$baseUrl/product=Receiver`" -Headers @{ Authorization = `"Bearer $token`" } | iex"
-    $script += [Environment]::NewLine
 }
 if (Yes "Install WpfClient?") {
     $part = "product=WpfClient"
     $part += "&usePosServer=" + (Yes "--- Connect client to local POS Server?")
     $part += "&useArchiveServer=" + (Yes "--- Connect client to central Archive Server?")
     $script += "irm `"$baseUrl/$part`" -Headers @{ Authorization = `"Bearer $token`" } | iex"
-    $script += [Environment]::NewLine
 }
 if (Yes "Install POS Server?") {
     $part = "product=PosServer"
@@ -64,12 +63,12 @@ if (Yes "Install POS Server?") {
     $part += "&databaseLogSize=" + (Num "--- Enter database log size in MB")
     $part += "&collation=" + (Collation "--- Enter database collation, e.g. sv-SE")
     $script += "irm `"$baseUrl/$part`" -Headers @{ Authorization = `"Bearer $token`" } | iex"
-    $script += [Environment]::NewLine
 }
 
 Write-Host ""
 Write-Host "# Here's your script. Run it in PowerShell as administrator on a client computer"
 Write-Host ""
-Write-Host $script
+$script | Join-String -Separator " ; " | Out-Host
+Write-Host ""
 Write-Host "# End of script"
 Write-Host ""
