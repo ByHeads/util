@@ -1,5 +1,3 @@
-$script = @()
-
 function Yes
 {
     param($message)
@@ -44,6 +42,7 @@ $environment = Read-Host "> First enter the environment name, e.g. fynda or fynd
 $token = Read-Host "> Now enter the install token" -MaskInput
 $baseUrl = "https://broadcaster.$environment.heads-api.com/api/install"
 
+$script = @()
 if (Yes "Should we first uninstall existing client software?") {
     $script += "irm raw.githubusercontent.com/byheads/util/main/u/all | iex"
 }
@@ -64,7 +63,6 @@ if (Yes "Install POS Server?") {
     $part += "&collation=" + (Collation "--- Enter database collation, e.g. sv-SE")
     $script += "irm `"$baseUrl/$part`" -Headers @{ Authorization = `"Bearer $token`" } | iex"
 }
-
 Write-Host ""
 Write-Host "# Here's your script. Run it in PowerShell as administrator on a client computer"
 Write-Host ""
