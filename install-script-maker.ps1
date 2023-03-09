@@ -60,7 +60,7 @@ if (Yes "> Install POS Server?") {
     $script += "irm `"`$uri/$part`" -Headers `$hds|iex"
 }
 Write-Host
-Write-Host "# Here's your script. Run it in PowerShell as administrator on a client computer:"
+Write-Host "# Here's your install script! Run it in PowerShell as administrator on a client computer:"
 Write-Host
 $script | Join-String -Separator ";if(!`$?){throw};" | % { "`$hds=@{Authorization=`"Bearer $token`"};`$uri=`"https://broadcaster.$environment.heads-api.com/api/install`";$_" } | Out-Host
 Write-Host
