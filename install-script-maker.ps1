@@ -48,16 +48,17 @@ if (Yes "> Install Receiver?") {
 }
 if (Yes "> Install WpfClient?") {
     $part = "product=WpfClient"
+    $part = "&sideLoad=" + + (Yes "--> Install deactivated in a legacy setup for later activation?")
     $part += "&usePosServer=" + (Yes "--> Connect client to local POS Server?")
     $part += "&useArchiveServer=" + (Yes "--> Connect client to central Archive Server?")
     $script += "irm `"`$uri/$part`" -Headers `$hds|iex"
 }
 if (Yes "> Install POS Server?") {
     $part = "product=PosServer"
-    if (Yes "--> Install deactivated next to an existing POS-server for later activation?") {
+    if (Yes "--> Install deactivated in a legacy setup for later activation?") {
         $part += "&sideLoad=True"
     } else {
-        $part += "&createDump=" + (Yes "--> Create a dump first?")
+        $part += "&createDump=" + (Yes "--> Create a dump of an existing POS-server?")
     }
     $part += "&databaseImageSize=" + (Num "--> Enter database image size in MB")
     $part += "&databaseLogSize=" + (Num "--> Enter database log size in MB")
