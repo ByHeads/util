@@ -54,7 +54,11 @@ if (Yes "> Install WpfClient?") {
 }
 if (Yes "> Install POS Server?") {
     $part = "product=PosServer"
-    $part += "&createDump=" + (Yes "--> Create a dump first?")
+    if (Yes "--> Install deactivated next to an existing POS-server for later activation?") {
+        $part += "&sideLoad=True"
+    } else {
+        $part += "&createDump=" + (Yes "--> Create a dump first?")
+    }
     $part += "&databaseImageSize=" + (Num "--> Enter database image size in MB")
     $part += "&databaseLogSize=" + (Num "--> Enter database log size in MB")
     $part += "&collation=" + (Collation "--> Enter database collation, e.g. sv-SE")
