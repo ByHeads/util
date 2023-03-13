@@ -12,6 +12,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         Write-Host "Done!"
     }
 }
+pwsh -Command "irm raw.githubusercontent.com/byheads/util/main/u/uninstall-legacy.ps1 | iex"
 pwsh -Command "irm raw.githubusercontent.com/byheads/util/main/u/uninstall-pos-server.ps1 | iex"
 pwsh -Command "irm raw.githubusercontent.com/byheads/util/main/u/uninstall-wpf-client.ps1 | iex"
 pwsh -Command "irm raw.githubusercontent.com/byheads/util/main/u/uninstall-receiver.ps1 | iex"

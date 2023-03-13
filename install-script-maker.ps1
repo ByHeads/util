@@ -39,7 +39,8 @@ Write-Host
 $environment = Read-Host "> First enter the environment name, e.g. fynda or fynda-test"
 $token = Read-Host "> Now enter the install token" -MaskInput
 $script = @()
-if (Yes "> Should we first uninstall existing client software?") {
+if (Yes "> Should we first uninstall existing client software, if present?") {
+    $script += "irm raw.githubusercontent.com/byheads/util/main/u/legacy|iex"
     $script += "irm raw.githubusercontent.com/byheads/util/main/u/all|iex"
 }
 if (Yes "> Install Receiver?") {

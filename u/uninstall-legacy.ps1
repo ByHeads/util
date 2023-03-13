@@ -25,7 +25,6 @@ foreach ($serviceName in $services) {
             Start-Sleep -Seconds 4
         }
         $out = sc.exe delete $serviceName
-
     }
 }
 
