@@ -48,7 +48,7 @@ if (Yes "> Install Receiver?") {
 }
 if (Yes "> Install WpfClient?") {
     $part = "product=WpfClient"
-    $part = "&sideLoad=" + + (Yes "--> Install deactivated in a legacy setup for later activation?")
+    $part += "&sideLoad=" + (Yes "--> Install deactivated in a legacy setup for later activation?")
     $part += "&usePosServer=" + (Yes "--> Connect client to local POS Server?")
     $part += "&useArchiveServer=" + (Yes "--> Connect client to central Archive Server?")
     $script += "irm `"`$uri/$part`" -Headers `$hds|iex"
