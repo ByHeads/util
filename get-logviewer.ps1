@@ -1,6 +1,7 @@
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 $ErrorActionPreference = "Stop"
 if (!(Test-Path "C:\ProgramData\Heads\LogViewer\Starcounter.LogViewer.exe")) {
+    mkdir "C:\ProgramData\Heads\LogViewer" -ErrorAction SilentlyContinue | Out-Null
     irm raw.githubusercontent.com/byheads/util/main/Starcounter.LogViewer.exe -OutFile "C:\ProgramData\Heads\LogViewer\Starcounter.LogViewer.exe"
 }
 Write-Host
