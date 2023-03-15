@@ -1,7 +1,3 @@
-if (![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
-    Write-Host "This script requires administrator rights, please run again in PowerShell as administrator" -ForegroundColor Red
-    return
-}
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     # Upgrade to PowerShell 7
     $coreVersion = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\*" -Name "SemanticVersion" -ErrorAction SilentlyContinue
