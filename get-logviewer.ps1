@@ -18,4 +18,4 @@ if (!$newestLogFile) {
     Write-Host "> However, you don't have any starcounter log files in C:\ProgramData\Heads\POSServer\bin\Server, so I can't start it for you..."
     return
 }
-& C:\ProgramData\Heads\Starcounter.LogViewer.exe $newestLogFile.FullName
+& C:\ProgramData\Heads\LogViewer\Starcounter.LogViewer.exe $newestLogFile.FullName
