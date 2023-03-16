@@ -6,7 +6,7 @@ if (!(Test-Path "C:\ProgramData\Heads\LogViewer\Starcounter.LogViewer.exe")) {
 }
 Write-Host -NoNewline "The "
 Write-Host -NoNewline "Starcounter LogViewer" -ForegroundColor Green
-Write-Host -NoNewline "is installed at "
+Write-Host -NoNewline " is installed at "
 Write-Host "C:\ProgramData\Heads\LogViewer" -ForegroundColor Yellow
 $newestLogFile = Get-ChildItem "C:\ProgramData\Heads\POSServer\bin\Server\starcounter.*.log" -ErrorAction SilentlyContinue | sort | select -last 1
 if (!$newestLogFile) {
