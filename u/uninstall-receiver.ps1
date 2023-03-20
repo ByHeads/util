@@ -13,5 +13,11 @@ if ($existingService) {
     $out = sc.exe delete $serviceName
 }
 $exists = Test-Path $installDir
-rm -r $installDir -ErrorAction SilentlyContinue
+rm -r "$installDir\bin" -ErrorAction SilentlyContinue
+rm "$installDir\version.txt.lnk" -ErrorAction SilentlyContinue
+rm -r "$installDir\Deployment" -ErrorAction SilentlyContinue
+rm -r "$installDir\Temp" -ErrorAction SilentlyContinue
+rm "$installDir\*.json" -ErrorAction SilentlyContinue
+rm "$installDir\*.info" -ErrorAction SilentlyContinue
+
 Write-Host ($exists ? "Done!" : "No installation found")
