@@ -20,6 +20,25 @@ function Num
     Write-Host "Invalid value, expected a number"
     return Num $message
 }
+function InvalidFileName
+{
+    param([string]$name)
+    return $name.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1
+}
+function Label
+{
+    $label = Read-Host "Enter a unique name for the manual client, e.g. Fynda Testmiljö"
+    $label = $label.Trim()
+    if ($label -eq '') {
+        Write-Host "Invalid value, expected a shortcut label"
+        return Label
+    }
+    if (InvalidFileName $label) {
+        Write-Host "Invalid value, $label contains characters that are invalid in a file name"
+        return Label
+    }
+    return $label
+}
 function Collation
 {
     param($message)
@@ -54,6 +73,14 @@ if (Yes "> Install WpfClient?") {
     $part = "product=WpfClient"
     if ($sideLoad) {
         $part += "&sideLoad=True"
+    } else {
+        if (Yes "--> Install as a manual client?") {
+            $label = Label
+            $installPath = [System.Web.HttpUtility]::UrlEncode("C:\ProgramData\Heads\$label")
+            $part += "&installPath=$installPath"
+            $shortcutLabel = [System.Web.HttpUtility]::UrlEncode("Heads Retail – $label")
+            $part += "&shortcutLabel=$shortcutLabel"
+        }
     }
     $part += "&usePosServer=" + (Yes "--> Connect client to local POS Server?")
     $part += "&useArchiveServer=" + (Yes "--> Connect client to central Archive Server?")
