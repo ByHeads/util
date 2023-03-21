@@ -51,4 +51,6 @@ rm -r "C:\ProgramData\Heads Svenska AB" -ErrorAction SilentlyContinue
 
 Remove-Item -Path HKCU:\SOFTWARE\Heads -Recurse
 
+echo "$((Get-Date -AsUTC).ToString("yyyyMMddHHmmss") ): UNINSTALLED legacy" >> "C:\ProgramData\Heads\install.log"
+
 Write-Host "Done!"

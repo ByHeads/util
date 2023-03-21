@@ -20,4 +20,8 @@ rm -r "$installDir\Temp" -ErrorAction SilentlyContinue
 rm "$installDir\*.json" -ErrorAction SilentlyContinue
 rm "$installDir\*.info" -ErrorAction SilentlyContinue
 
-Write-Host ($exists ? "Done!" : "No installation found")
+if ($exists) {
+    echo "$((Get-Date -AsUTC).ToString("yyyyMMddHHmmss") ): UNINSTALLED Receiver" >> "C:\ProgramData\Heads\install.log"
+    Write-Host "Done!"
+}
+else { Write-Host "No installation found" }

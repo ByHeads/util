@@ -24,4 +24,9 @@ ForEach ($name in @("scdbs", "scdbc", "scsql", "scpmm", "scweaver")) {
 if ($wait) { Start-Sleep -Seconds 4 }
 $exists = Test-Path $installDir
 rm -r $installDir -ErrorAction SilentlyContinue
-Write-Host ($exists ? "Done!" : "No installation found")
+
+if ($exists) {
+    echo "$((Get-Date -AsUTC).ToString("yyyyMMddHHmmss") ): UNINSTALLED POS Server" >> "C:\ProgramData\Heads\install.log"
+    Write-Host "Done!"
+}
+else { Write-Host "No installation found" }

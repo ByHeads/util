@@ -18,4 +18,9 @@ if ($existingProcess) {
 }
 $exists = Test-Path $installDir
 rm -r $installDir -ErrorAction SilentlyContinue
-Write-Host ($exists ? "Done!" : "No installation found")
+
+if ($exists) {
+    echo "$((Get-Date -AsUTC).ToString("yyyyMMddHHmmss") ): UNINSTALLED WPF Client" >> "C:\ProgramData\Heads\install.log"
+    Write-Host "Done!"
+}
+else { Write-Host "No installation found" }
