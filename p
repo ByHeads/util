@@ -1,4 +1,6 @@
-#!ps A robust preflight script for initiating and checking client computers before install. Intended for any windows computer.
+#!ps
+# A robust preflight script for initiating and checking client computers before install. Intended for client computers
+# and when the script is an install or uninstall script that requires administrator rights
 if (![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
     Write-Host "This script requires administrator rights, please run again in PowerShell as administrator" -ForegroundColor Red
     throw
