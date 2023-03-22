@@ -17,6 +17,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
             Write-Host -NoNewline "> Installing PowerShell 7... "
             iex "& { $( irm 'https://aka.ms/install-powershell.ps1' ) } -UseMSI -Quiet" *>&1 | Out-Null
             Write-Host "Done!"
+            $env:path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
         }
         catch {
             Write-Host "Failed!" -ForegroundColor Red
@@ -31,6 +32,5 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
             Write-Host
             throw
         }
-        $env:path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
     }
 }

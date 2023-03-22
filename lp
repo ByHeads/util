@@ -5,7 +5,8 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     # Upgrade to PowerShell 7
     $coreVersion = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\PowerShellCore\InstalledVersions\*" -Name "SemanticVersion" -ErrorAction SilentlyContinue
     if (!$coreVersion -or !$coreVersion.StartsWith("7")) {
-        $o = winget install Microsoft.PowerShell -h
+        Write-Host "> Installing PowerShell 7 using winget..."
+        winget install Microsoft.PowerShell -h
         $env:path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
     }
 }
