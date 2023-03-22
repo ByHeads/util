@@ -93,16 +93,16 @@ if (Yes "> Install POS Server?") {
     } else {
         $part += "&createDump=" + (Yes "--> Create a dump of an existing POS-server?")
     }
+    $part += "&collation=" + (Collation "--> Enter database collation, e.g. sv-SE")
     $part += "&databaseImageSize=" + (Num "--> Enter database image size in MB (or enter for 1024)" 1024)
     $part += "&databaseLogSize=" + (Num "--> Enter database log size in MB (or enter for 1024)" 1024)
-    $part += "&collation=" + (Collation "--> Enter database collation, e.g. sv-SE")
     $script += "irm `"`$u/$part`" @o|iex"
 }
-$throwSeparator = ";if(!`$?){throw};"
+$arr = $script | %{ "{$_}" } | Join-String -Separator ","
 Write-Host
 Write-Host "# Here's your install script! Run it in PowerShell as administrator on a client computer:"
 Write-Host
-$script | Join-String -Separator $throwSeparator | % { "`$o=@{Headers=@{Authorization=`"Bearer $token`"}};`$u=`"https://broadcaster.$environment.heads-api.com/api/install`";$_" } | Out-Host
+Write-Host "`$o=@{Headers=@{Authorization=`"Bearer $token`"}};`$u=`"https://broadcaster.$environment.heads-api.com/api/install`";$arr|%{try{&`$_}catch{break}}"
 Write-Host
 Write-Host "# End of script"
 Write-Host
