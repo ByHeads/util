@@ -1,8 +1,10 @@
 if (![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
-    throw "This script requires administrator rights, please run again in PowerShell as administrator" -ForegroundColor Red
+    Write-Host "This script requires administrator rights, please run again in PowerShell as administrator" -ForegroundColor Red
+    throw
 }
 if (![Environment]::Is64BitOperatingSystem) {
-    throw "This computer is running a 32-bit operating system. This software can only run on 64-bit systems."
+    Write-Host "This computer is running a 32-bit operating system. This software can only run on 64-bit systems" -ForegroundColor Red
+    throw
 }
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     # Upgrade to PowerShell 7
