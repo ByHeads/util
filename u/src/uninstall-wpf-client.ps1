@@ -10,6 +10,12 @@ Get-ChildItem "$desktopPath\*.lnk" | % {
         Remove-Item $_
     }
 }
+$desktopPath = "$env:Public\Desktop"
+Get-ChildItem "$desktopPath\*.lnk" | % {
+    if ($shell.CreateShortcut($_).TargetPath -eq $processFilePath) {
+        Remove-Item $_
+    }
+}
 $existingProcess = Get-Process "PolyjuiceWindows" -ErrorAction SilentlyContinue | Where { $_.MainModule.FileName -eq $processFilePath }
 if ($existingProcess) {
     $existingProcess | Stop-Process -Force

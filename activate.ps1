@@ -9,7 +9,7 @@ Write-Host -NoNewline "> Creating WPF client desktop shortcut... "
 $wpfInstallDir = "C:\ProgramData\Heads\Client";
 $processFilePath = "$wpfInstallDir\bin\PolyjuiceWindows.exe"
 $shell = New-Object -ComObject WScript.Shell
-$desktopPath = $shell.SpecialFolders("Desktop")
+$desktopPath = "$env:Public\Desktop"
 $shortcutPath = "$desktopPath\Heads Retail.lnk"
 $shortcut = $shell.CreateShortcut($shortcutPath)
 $shortcut.TargetPath = $processFilePath

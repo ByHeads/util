@@ -57,6 +57,11 @@ Write-Host -NoNewline "To quit at any time, press "
 Write-Host -ForegroundColor:Yellow "Ctrl+C"
 Write-Host
 $environment = Read-Host "> First enter the environment name, e.g. fynda or fynda-test"
+$environment = $environment.Trim()
+if ( $environment.StartsWith("http")) {
+    Write-Host "Enter environment name, not a web address. Examples: fynda, fynda-test, heads-test001"
+    return
+}
 $token = Read-Host "> Now enter the install token" -MaskInput
 $script = @()
 $sideLoad = Yes "> Install as deactivated software in a legacy (SUS/RA) setup for later activation?"
