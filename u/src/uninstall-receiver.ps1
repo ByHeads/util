@@ -12,7 +12,7 @@ if ($existingService) {
     }
     $out = sc.exe delete $serviceName
 }
-$exists = Test-Path $installDir
+$exists = Test-Path "$installDir\bin"
 rm -r "$installDir\bin" -ErrorAction SilentlyContinue
 rm "$installDir\version.txt.lnk" -ErrorAction SilentlyContinue
 rm -r "$installDir\Deployment" -ErrorAction SilentlyContinue
