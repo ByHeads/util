@@ -1,3 +1,10 @@
 #!ps
-try { irm raw.githubusercontent.com/byheads/util/main/p | iex } catch { break }
-pwsh { irm raw.githubusercontent.com/byheads/util/main/activate.ps1 | iex }
+$repo = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
+if (!$repo) {
+    Register-PSRepository -Default
+}
+Set-PSRepository -Name "PSGallery" -InstallationPolicy "Trusted"
+$nuget = Get-PackageProvider -Name nuget -ErrorAction SilentlyContinue
+if (!$nuget) {
+    Install-PackageProvider -Name "NuGet" -Force
+}
