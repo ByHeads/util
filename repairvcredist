@@ -11,4 +11,3 @@ if (!$nuget) {
     Install-PackageProvider -Name "NuGet" -Force
     Write-Host "Added NuGet PackageProvider"
 }
-    
