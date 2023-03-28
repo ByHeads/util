@@ -81,9 +81,9 @@ if (Yes "> Install WpfClient?") {
     } else {
         if (Yes "--> Install as a manual client?") {
             $label = Label
-            $installPath = [System.Web.HttpUtility]::UrlEncode("C:\ProgramData\Heads\$label")
+            $installPath = [System.Uri]::EscapeDataString("C:\ProgramData\Heads\$label")
             $part += "&installPath=$installPath"
-            $shortcutLabel = [System.Web.HttpUtility]::UrlEncode("Heads Retail – $label")
+            $shortcutLabel = [System.Uri]::EscapeDataString("Heads Retail – $label")
             $part += "&shortcutLabel=$shortcutLabel"
         }
     }
