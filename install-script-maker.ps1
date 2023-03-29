@@ -83,7 +83,7 @@ if (Yes "> Install WpfClient?") {
             $label = Label
             $installPath = [System.Uri]::EscapeDataString("C:\ProgramData\Heads\$label")
             $part += "&installPath=$installPath"
-            $shortcutLabel = [System.Uri]::EscapeDataString("Heads Retail – $label")
+            $shortcutLabel = [System.Uri]::EscapeDataString("Heads Retail - $label")
             $part += "&shortcutLabel=$shortcutLabel"
         }
     }
