@@ -22,10 +22,10 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         catch {
             Write-Host "Failed!" -ForegroundColor Red
             Write-Host
-            Write-Host "Could not install PowerShell 7 :/ Try again, and if the error persists, try a manual install using the installer below:"
+            Write-Host "Could not install PowerShell 7 :/ Try again, and if the error persists, try a manual install using one of the methods mentioned here:"
             Write-Host
             Write-Host "--> " -NoNewline -ForegroundColor Gray
-            Write-Host "https://github.com/PowerShell/PowerShell/releases/download/v7.3.3/PowerShell-7.3.3-win-x64.msi" -ForegroundColor Yellow -NoNewline
+            Write-Host "https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows" -ForegroundColor Yellow -NoNewline
             Write-Host " <--" -ForegroundColor Gray
             Write-Host
             Write-Host "... and then try to run the script again"
