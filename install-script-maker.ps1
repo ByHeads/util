@@ -50,18 +50,55 @@ function Collation
     Write-Host "Invalid collation, expected sv-SE, en-GB or nb-NO"
     return Collation $message
 }
+function Get-BroadcasterUrl
+{
+    param($instr)
+    if ($instr) { $instr = " $instr" }
+    $input = Read-Host "> Enter the URL or hostname of the Broadcaster$instr"
+    $input = $input.Trim();
+    if ( $input.StartsWith("@")) {
+        # Use input as-is
+        $input = $input.SubString(1)
+    }
+    elseif (!$input.StartsWith("https://")) {
+        # Build from a partial URL or conventional hostname
+        if ( $input.Contains(".")) {
+            # It's a partial URL
+            $input = "https://$input"
+        }
+        else {
+            # It's a hostname
+            $input = "https://broadcaster.$input.heads-api.com"
+        }
+    }
+    if (!$input.EndsWith("/api")) {
+        $input += "/api"
+    }
+    $r = $null
+    if (![System.Uri]::TryCreate($input, 'Absolute', [ref]$r)) {
+        Write-Host "Invalid URI format. Try again."
+        return Get-BroadcasterUrl
+    }
+    try {
+        $options = irm $input -Method "OPTIONS" -TimeoutSec 3
+        if (($options.Status -eq "success") -and ($options.Data[0].Resource -eq "RESTable.AvailableResource")) {
+            Write-Host "That Broadcaster exists! 🎉" -ForegroundColor Green
+            return $input
+        }
+    }
+    catch {
+    }
+    Write-Host "Warning: Could not verify if a Broadcaster exists at $input" -ForegroundColor Yellow
+    return $input
+}
 
 Write-Host
 Write-Host "This tool will help create a Broadcaster install script!" -ForegroundColor Green
 Write-Host -NoNewline "To quit at any time, press "
-Write-Host -ForegroundColor:Yellow "Ctrl+C"
+Write-Host -ForegroundColor Yellow "Ctrl+C"
 Write-Host
-$environment = Read-Host "> First enter the environment name, e.g. fynda or fynda-test"
-$environment = $environment.Trim()
-if ( $environment.StartsWith("http")) {
-    Write-Host "Enter environment name, not a web address. Examples: fynda, fynda-test, heads-test001"
-    return
-}
+
+$bc = Get-BroadcasterUrl
 $token = Read-Host "> Now enter the install token" -MaskInput
 $script = @()
 if (Yes "> Should we first uninstall existing client software, if present?") {
@@ -98,7 +135,7 @@ $arr = $script | %{ "{$_}" } | Join-String -Separator ","
 Write-Host
 Write-Host "# Here's your install script! Run it in PowerShell as administrator on a client computer:"
 Write-Host
-Write-Host "`$o=@{He=@{Authorization=`"Bearer $token`"}};`$u=`"https://broadcaster.$environment.heads-api.com/api/install`";$arr|%{try{&`$_}catch{echo `$_;break}}"
+Write-Host "`$o=@{He=@{Authorization=`"Bearer $token`"}};`$u=`"$bc/install`";$arr|%{try{&`$_}catch{echo `$_;break}}"
 Write-Host
 Write-Host "# End of script"
 Write-Host
