@@ -86,8 +86,7 @@ function Get-BroadcasterUrl
             return $input
         }
     }
-    catch {
-    }
+    catch { }
     Write-Host "Warning: Could not verify if a Broadcaster exists at $input" -ForegroundColor Yellow
     return $input
 }
