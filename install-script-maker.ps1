@@ -64,7 +64,6 @@ if ( $environment.StartsWith("http")) {
 }
 $token = Read-Host "> Now enter the install token" -MaskInput
 $script = @()
-$sideLoad = Yes "> Install as deactivated software in a legacy (SUS/RA) setup for later activation?"
 if (Yes "> Should we first uninstall existing client software, if present?") {
     if (Yes "--> Also uninstall legacy (SUS/RA) client software?") {
         $script += "irm raw.githubusercontent.com/byheads/util/main/u/legacy|iex"
@@ -76,16 +75,12 @@ if (Yes "> Install Receiver?") {
 }
 if (Yes "> Install WpfClient?") {
     $part = "product=WpfClient"
-    if ($sideLoad) {
-        $part += "&sideLoad=True"
-    } else {
-        if (Yes "--> Install as a manual client?") {
-            $label = Label
-            $installPath = [System.Uri]::EscapeDataString("C:\ProgramData\Heads\$label")
-            $part += "&installPath=$installPath"
-            $shortcutLabel = [System.Uri]::EscapeDataString("Heads Retail - $label")
-            $part += "&shortcutLabel=$shortcutLabel"
-        }
+    if (Yes "--> Install as a manual client?") {
+        $label = Label
+        $installPath = [System.Uri]::EscapeDataString("C:\ProgramData\Heads\$label")
+        $part += "&installPath=$installPath"
+        $shortcutLabel = [System.Uri]::EscapeDataString("Heads Retail - $label")
+        $part += "&shortcutLabel=$shortcutLabel"
     }
     $part += "&usePosServer=" + (Yes "--> Connect client to local POS Server?")
     $part += "&useArchiveServer=" + (Yes "--> Connect client to central Archive Server?")
@@ -93,11 +88,7 @@ if (Yes "> Install WpfClient?") {
 }
 if (Yes "> Install POS Server?") {
     $part = "product=PosServer"
-    if ($sideLoad) {
-        $part += "&sideLoad=True"
-    } else {
-        $part += "&createDump=" + (Yes "--> Create a dump of an existing POS-server?")
-    }
+    $part += "&createDump=" + (Yes "--> Create a dump of an existing POS-server?")
     $part += "&collation=" + (Collation "--> Enter database collation, e.g. sv-SE")
     $part += "&databaseImageSize=" + (Num "--> Enter database image size in MB (or enter for 1024)" 1024)
     $part += "&databaseLogSize=" + (Num "--> Enter database log size in MB (or enter for 1024)" 1024)
