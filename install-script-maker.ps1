@@ -27,7 +27,7 @@ function InvalidFileName
 }
 function Label
 {
-    $label = Read-Host "Enter a unique name for the manual client, e.g. Fynda Testmiljö"
+    $label = Read-Host "Enter a unique name for the manual client, e.g. Heads Testmiljö"
     $label = $label.Trim()
     if ($label -eq '') {
         Write-Host "Invalid value, expected a shortcut label"
