@@ -2,41 +2,52 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 $ErrorActionPreference = "Stop"
 Write-Host -NoNewline "> Uninstalling legacy software... "
 
-$shell = New-Object -ComObject WScript.Shell
-$desktopPath = $shell.SpecialFolders("Desktop")
-Get-ChildItem "$desktopPath\*.lnk" | % {
-    if ($shell.CreateShortcut($_).TargetPath -eq "C:\Program Files (x86)\Heads\Heads RetailWPF\Heads.exe") {
-        Remove-Item $_
-    }
-}
-
-$services = @(
-"Heads Maintenance Service"
-"Heads-POSServer Download Service"
-"Heads-POSServer Launcher"
-"Heads-RetailWPF Download Service"
-)
-
-foreach ($serviceName in $services) {
-    $existingService = Get-Service $serviceName -ErrorAction SilentlyContinue
+# SUS/Services
+foreach ($service in "Heads Maintenance Service", "Heads-POSServer Download Service", "Heads-POSServer Launcher", "Heads-RetailWPF Download Service") {
+    $existingService = Get-Service $service -ErrorAction SilentlyContinue
     if ($existingService) {
         if ($existingService.Status -eq "Running") {
-            $out = Stop-Service -Name $serviceName
+            $out = Stop-Service -Name $service
             Start-Sleep -Seconds 4
         }
-        $out = sc.exe delete $serviceName
+        $out = sc.exe delete $service
     }
 }
 
-$clientProcess = Get-Process "PolyjuiceWindows" -ErrorAction SilentlyContinue
+# Client
+$clientFilePath = "C:\ProgramData\Heads Svenska AB\Client\Bin\Client\PolyjuiceWindows.exe"
+$clientProcess = Get-Process "PolyjuiceWindows" -ErrorAction SilentlyContinue | Where { $_.MainModule.FileName -eq $clientFilePath }
 if ($clientProcess) {
     $clientProcess | Stop-Process -Force
     $clientProcess | Wait-Process
     Start-Sleep -Seconds 4
 }
+$headsExePath = "C:\Program Files (x86)\Heads\Heads RetailWPF\Heads.exe"
+$desktopPath = $shell.SpecialFolders("Desktop")
+Get-ChildItem "$desktopPath\*.lnk" | % {
+    if ($shell.CreateShortcut($_).TargetPath -eq $headsExePath) {
+        Remove-Item $_
+    }
+}
+$desktopPath = "$env:Public\Desktop"
+Get-ChildItem "$desktopPath\*.lnk" | % {
+    if ($shell.CreateShortcut($_).TargetPath -eq $headsExePath) {
+        Remove-Item $_
+    }
+}
 
+# StatusLogViewer
+$logViewerPath = "C:\Program Files (x86)\Heads\Heads POSServer\StatusLogMonitor\StatusLogViewer.exe"
+$statusLogViewerProcess = Get-Process "StatusLogViewer" -ErrorAction SilentlyContinue | Where { $_.MainModule.FileName -eq $logViewerPath }
+if ($statusLogViewerProcess) {
+    $statusLogViewerProcess | Stop-Process -Force
+    $statusLogViewerProcess | Wait-Process
+    Start-Sleep -Seconds 4
+}
+
+# Starcounter processes
 $wait = $false
-foreach ($name in @("scdbs", "scdbc", "scsql", "scpmm", "scweaver")) {
+foreach ($name in @("scdbs", "scdbc", "scsql", "scpmm", "scweaver" )) {
     $process = Get-Process $name -ErrorAction SilentlyContinue
     if ($process) {
         $process | Stop-Process -Force
@@ -46,11 +57,13 @@ foreach ($name in @("scdbs", "scdbc", "scsql", "scpmm", "scweaver")) {
 }
 if ($wait) { Start-Sleep -Seconds 4 }
 
+# Directories and registry entries
 rm -r "C:\Program Files (x86)\Heads" -ErrorAction SilentlyContinue
 rm -r "C:\ProgramData\Heads Svenska AB" -ErrorAction SilentlyContinue
-
 Remove-Item -Path HKCU:\SOFTWARE\Heads -Recurse
 
+# Write log
+if (!(Test-Path "C:\ProgramData\Heads")) { $out = New-Item -Path "C:\ProgramData\Heads" -ItemType Directory }
 echo "$((Get-Date -AsUTC).ToString("yyyyMMddHHmmss") ): UNINSTALLED legacy" >> "C:\ProgramData\Heads\install.log"
 
 Write-Host "Done!"
