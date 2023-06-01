@@ -64,6 +64,6 @@ Remove-Item -Path HKCU:\SOFTWARE\Heads -Recurse
 
 # Write log
 if (!(Test-Path "C:\ProgramData\Heads")) { $out = New-Item -Path "C:\ProgramData\Heads" -ItemType Directory }
-echo "$((Get-Date -AsUTC).ToString("yyyyMMddHHmmss") ): UNINSTALLED legacy" >> "C:\ProgramData\Heads\install.log"
+echo "$((Get-Date).ToUniversalTime().ToString("yyyyMMddHHmmss") ): UNINSTALLED legacy" >> "C:\ProgramData\Heads\install.log"
 
 Write-Host "Done!"

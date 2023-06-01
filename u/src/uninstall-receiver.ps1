@@ -22,7 +22,7 @@ rm "$installDir\*.info" -ErrorAction SilentlyContinue
 
 if ($exists) {
     if (!(Test-Path "C:\ProgramData\Heads")) { $out = New-Item -Path "C:\ProgramData\Heads" -ItemType Directory }
-    echo "$((Get-Date -AsUTC).ToString("yyyyMMddHHmmss") ): UNINSTALLED Receiver" >> "C:\ProgramData\Heads\install.log"
+    echo "$((Get-Date).ToUniversalTime().ToString("yyyyMMddHHmmss") ): UNINSTALLED Receiver" >> "C:\ProgramData\Heads\install.log"
     Write-Host "Done!"
 }
 else { Write-Host "No installation found" }

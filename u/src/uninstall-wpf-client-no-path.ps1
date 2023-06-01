@@ -28,7 +28,7 @@ rm -r $installDir -ErrorAction SilentlyContinue
 
 if ($exists) {
     if (!(Test-Path "C:\ProgramData\Heads")) { $out = New-Item -Path "C:\ProgramData\Heads" -ItemType Directory }
-    echo "$((Get-Date -AsUTC).ToString("yyyyMMddHHmmss") ): UNINSTALLED WPF Client at $installDir" >> "C:\ProgramData\Heads\install.log"
+    echo "$((Get-Date).ToUniversalTime().ToString("yyyyMMddHHmmss") ): UNINSTALLED WPF Client at $installDir" >> "C:\ProgramData\Heads\install.log"
     Write-Host "Done!"
 }
 else { Write-Host "No installation found" }
