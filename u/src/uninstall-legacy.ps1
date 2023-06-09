@@ -23,6 +23,7 @@ if ($clientProcess) {
     Start-Sleep -Seconds 4
 }
 $headsExePath = "C:\Program Files (x86)\Heads\Heads RetailWPF\Heads.exe"
+$shell = New-Object -ComObject WScript.Shell
 $desktopPath = $shell.SpecialFolders("Desktop")
 Get-ChildItem "$desktopPath\*.lnk" | % {
     if ($shell.CreateShortcut($_).TargetPath -eq $headsExePath) {
