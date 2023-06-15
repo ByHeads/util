@@ -109,6 +109,7 @@ if (Yes "> Should we first uninstall existing client software, if present?") {
 if (Yes "> Install Receiver?") {
     $script += "irm `"`$u/product=Receiver`" @o|iex"
 }
+$csa = $false
 if (Yes "> Install WpfClient?") {
     $part = "product=WpfClient"
     if (Yes "--> Install as a manual client?") {
@@ -122,7 +123,11 @@ if (Yes "> Install WpfClient?") {
     $part += "&useArchiveServer=" + (Yes "--> Connect client to central Archive Server?")
     $script += "irm `"`$u/$part`" @o|iex"
 }
-if (Yes "> Install POS Server?") {
+elseif (Yes "> Install CustomerServiceApplication?") {
+    $script += "irm `"`$u/product=CustomerServiceApplication`" @o|iex"
+    $csa = $true
+}
+if (!$csa -and (Yes "> Install POS Server?")) {
     $part = "product=PosServer"
     $part += "&createDump=" + (Yes "--> Create a dump of an existing POS-server?")
     $part += "&collation=" + (Collation "--> Enter database collation, e.g. sv-SE")
