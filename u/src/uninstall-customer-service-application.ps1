@@ -3,7 +3,10 @@ $ErrorActionPreference = "Stop"
 Write-Host -NoNewline "> Uninstalling Customer Service Application... "
 $installDir = "C:\ProgramData\Heads\CustomerServiceApplication";
 $processFilePath = "$installDir\bin\PolyjuiceWindows.exe"
+$scheduledTaskName = "Customer Service Application Keep-Alive"
 $shell = New-Object -ComObject WScript.Shell
+Unregister-ScheduledTask -TaskName $scheduledTaskName -Confirm $false -ErrorAction SilentlyContinue | Out-Null
+Start-Sleep -Seconds 1
 $desktopPath = $shell.SpecialFolders("Desktop")
 Get-ChildItem "$desktopPath\*.lnk" | % {
     if ($shell.CreateShortcut($_).TargetPath -eq $processFilePath) {
