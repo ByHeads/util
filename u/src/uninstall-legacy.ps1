@@ -3,7 +3,16 @@ $ErrorActionPreference = "Stop"
 Write-Host -NoNewline "> Uninstalling legacy software... "
 
 # SUS/Services
-foreach ($service in "Heads Maintenance Service", "Heads-POSServer Download Service", "Heads-POSServer Launcher", "Heads-RetailWPF Download Service") {
+$legacyServices = @(
+"Heads Maintenance Service"
+"Heads-POSServer Download Service"
+"Heads-POSServer Launcher"
+"Heads-RetailWPF Download Service"
+"Heads-CustomerServiceApplicationWPF Download Service"
+"Heads-CustomerServiceApplicationWPF State service"
+)
+
+foreach ($service in $legacyServices) {
     $existingService = Get-Service $service -ErrorAction SilentlyContinue
     if ($existingService) {
         if ($existingService.Status -eq "Running") {
@@ -23,6 +32,37 @@ if ($clientProcess) {
     Start-Sleep -Seconds 4
 }
 $headsExePath = "C:\Program Files (x86)\Heads\Heads RetailWPF\Heads.exe"
+$shell = New-Object -ComObject WScript.Shell
+$desktopPath = $shell.SpecialFolders("Desktop")
+Get-ChildItem "$desktopPath\*.lnk" | % {
+    if ($shell.CreateShortcut($_).TargetPath -eq $headsExePath) {
+        Remove-Item $_
+    }
+}
+$desktopPath = "$env:Public\Desktop"
+Get-ChildItem "$desktopPath\*.lnk" | % {
+    if ($shell.CreateShortcut($_).TargetPath -eq $headsExePath) {
+        Remove-Item $_
+    }
+}
+
+# Customer Service Application
+Unregister-ScheduledTask -TaskName "Heads Keep Alive" -Confirm $false -ErrorAction SilentlyContinue | Out-Null
+Start-Sleep -Seconds 2
+$runnerProcess = Get-Process "Heads.Runner" -ErrorAction SilentlyContinue
+if ($runnerProcess) {
+    $runnerProcess | Stop-Process -Force
+    $runnerProcess | Wait-Process
+    Start-Sleep -Seconds 2
+}
+$csaFilePath = "C:\ProgramData\Heads Svenska AB\CustomerServiceClient\Bin\CustomerServiceClient\PolyjuiceWindows.exe"
+$csaProcess = Get-Process "PolyjuiceWindows" -ErrorAction SilentlyContinue | Where { $_.MainModule.FileName -eq $csaFilePath }
+if ($csaProcess) {
+    $csaProcess | Stop-Process -Force
+    $csaProcess | Wait-Process
+    Start-Sleep -Seconds 4
+}
+$headsExePath = "C:\Program Files (x86)\Heads\Heads CustomerServiceApplicationWPF\Heads.exe"
 $shell = New-Object -ComObject WScript.Shell
 $desktopPath = $shell.SpecialFolders("Desktop")
 Get-ChildItem "$desktopPath\*.lnk" | % {
