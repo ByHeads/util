@@ -101,7 +101,7 @@ if ($wait) { Start-Sleep -Seconds 4 }
 # Directories and registry entries
 rm -r "C:\Program Files (x86)\Heads" -ErrorAction SilentlyContinue
 rm -r "C:\ProgramData\Heads Svenska AB" -ErrorAction SilentlyContinue
-Remove-Item -Path HKCU:\SOFTWARE\Heads -Recurse
+Remove-Item -Path HKCU:\SOFTWARE\Heads -Recurse -ErrorAction SilentlyContinue
 
 # Write log
 if (!(Test-Path "C:\ProgramData\Heads")) { $out = New-Item -Path "C:\ProgramData\Heads" -ItemType Directory }
