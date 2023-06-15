@@ -47,7 +47,7 @@ Get-ChildItem "$desktopPath\*.lnk" | % {
 }
 
 # Customer Service Application
-Unregister-ScheduledTask -TaskName "Heads Keep Alive" -Confirm $false -ErrorAction SilentlyContinue | Out-Null
+Unregister-ScheduledTask -TaskName "Heads Keep Alive" -Confirm:$false -ErrorAction SilentlyContinue | Out-Null
 Start-Sleep -Seconds 2
 $runnerProcess = Get-Process "Heads.Runner" -ErrorAction SilentlyContinue
 if ($runnerProcess) {
