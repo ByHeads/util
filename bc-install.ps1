@@ -2,6 +2,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 $ErrorActionPreference = "Stop"
 try {
     # Bind some variables
+    $drive = $pwd.drive.name
     $product = 'Broadcaster'
     $serviceName = 'Heads Broadcaster'
     if (-not( Test-Path env:HEADS_BroadcasterDir)) {
@@ -9,7 +10,7 @@ try {
     }
     $serviceParameters = @{
         Name = "$serviceName"
-        BinaryPathName = "`"C:$env:HEADS_BroadcasterDir\bin\Broadcaster.Application.exe`" `"C:$env:HEADS_BroadcasterDir`""
+        BinaryPathName = "`"$drive`:$env:HEADS_BroadcasterDir\bin\Broadcaster.Application.exe`" `"$drive`:$env:HEADS_BroadcasterDir`""
         DisplayName = $serviceName
         StartupType = "Automatic"
     }
