@@ -72,7 +72,7 @@ try {
     Start-Service -Name $serviceName
     Write-Host "> The $serviceName service is now running"
     #endregion
-    Write-Host -ForegroundColor:Green "- $product was successfully installed!"
+    Write-Host -ForegroundColor:Green "> All done! $product was successfully installed!"
 }
 catch {
     Write-Error $_
