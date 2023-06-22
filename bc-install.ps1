@@ -26,7 +26,7 @@ try {
     Write-Host "     \| \|    <>============================================================<>   \"
     Write-Host "_________________________________________________It_does_not_suck________________/"
     Write-Host
-    Write-Host "> Installing Broadcaster into $env:HEADS_BroadcasterDir"
+    Write-Host "> Installing Broadcaster into $drive`:$env:HEADS_BroadcasterDir"
     # Delete any existing Broadcaster service
     Write-Host "> Finding existing services with the name $serviceName"
     $existingService = Get-Service $serviceName -ErrorAction SilentlyContinue
