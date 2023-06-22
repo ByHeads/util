@@ -62,8 +62,6 @@ try {
         throw "The matching zip file found in $env:HEADS_BroadcasterDir was of an unknown (non-Broadcaster) format"
     }
     $zip | Expand-Archive -DestinationPath "$env:HEADS_BroadcasterDir\bin" -Force
-    # Remove the expanded archive
-    Remove-Item -Path "$env:HEADS_BroadcasterDir\*.zip"
     #region Create the Broadcaster service
     Write-Host "> Creating the $serviceName Windows service"
     $out = New-Service @serviceParameters
