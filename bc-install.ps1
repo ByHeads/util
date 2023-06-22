@@ -8,13 +8,13 @@ try {
     if (-not( Test-Path env:HEADS_BroadcasterDir)) {
         $env:HEADS_BroadcasterDir = '\Heads\Broadcaster'
     }
+    $installDir = $env:HEADS_BroadcasterDir
     $serviceParameters = @{
         Name = "$serviceName"
-        BinaryPathName = "`"$drive`:$env:HEADS_BroadcasterDir\bin\Broadcaster.Application.exe`" `"$drive`:$env:HEADS_BroadcasterDir`""
+        BinaryPathName = "`"$drive`:$installDir\bin\Broadcaster.Application.exe`" `"$drive`:$installDir`""
         DisplayName = $serviceName
         StartupType = "Automatic"
     }
-    $installDir = $env:HEADS_BroadcasterDir
     # Print a nice logo
     Write-Host
     Write-Host "__________________________________________________________________________________"
@@ -26,7 +26,7 @@ try {
     Write-Host "     \| \|    <>============================================================<>   \"
     Write-Host "_________________________________________________It_does_not_suck________________/"
     Write-Host
-    Write-Host "> Installing Broadcaster into $drive`:$env:HEADS_BroadcasterDir"
+    Write-Host "> Installing Broadcaster into $drive`:$installDir"
     # Delete any existing Broadcaster service
     Write-Host "> Finding existing services with the name $serviceName"
     $existingService = Get-Service $serviceName -ErrorAction SilentlyContinue
@@ -37,35 +37,35 @@ try {
         Write-Host "> An existing service with name $serviceName was deleted"
     }
     # Ensure that the directory denoted by env:HEADS_BroadcasterDir exists
-    if (-not(Test-Path $env:HEADS_BroadcasterDir)) {
-        throw "Broadcaster installation failed: Directory $HEADS_BroadcasterDir does not exist"
+    if (!(Test-Path $installDir)) {
+        throw "Broadcaster installation failed: Directory $installDir does not exist"
     }
     # Fail if there's not exactly one zip file in the Broadcaster directory
-    if ((Get-ChildItem "$env:HEADS_BroadcasterDir\*.zip" | Measure-Object).Count -ne 1) {
-        throw "Broadcaster installation failed: Expected exactly one .zip file in the Broadcaster directory ($env:HEADS_BroadcasterDir)"
+    if ((Get-ChildItem "$installDir\*.zip" | Measure-Object).Count -ne 1) {
+        throw "Broadcaster installation failed: Expected exactly one .zip file in the Broadcaster directory ($installDir)"
     }
     # Fail if there's no appsettings.json file in the Broadcaster directory
-    if ((Get-ChildItem "$env:HEADS_BroadcasterDir\appsettings.json" | Measure-Object).Count -eq 0) {
-        throw "Broadcaster installation failed: Expected an appsettings.json file in the Broadcaster directory ($env:HEADS_BroadcasterDir). See the installation steps for how to create an appsettings.json file"
+    if ((Get-ChildItem "$installDir\appsettings.json" | Measure-Object).Count -eq 0) {
+        throw "Broadcaster installation failed: Expected an appsettings.json file in the Broadcaster directory ($installDir). See the docs for how to create an appsettings.json file"
     }
     # Clear the existing \bin directory, if any
-    if (Test-Path "$env:HEADS_BroadcasterDir\bin") {
-        rm -r -fo "$env:HEADS_BroadcasterDir\bin"
+    if (Test-Path "$installDir\bin") {
+        rm -r -fo "$installDir\bin"
     }
     # Expand the zip file to the bin directory
-    $zip = Get-ChildItem "$env:HEADS_BroadcasterDir\*.zip" | Select-Object -first 1
+    $zip = Get-ChildItem "$installDir\*.zip" | Select-Object -first 1
     $version = $zip.ToString().Split("-")[1]
     if ($version) {
         Write-Host "> Installing Broadcaster version $version"
     }
     else {
-        throw "The matching zip file found in $env:HEADS_BroadcasterDir was of an unknown (non-Broadcaster) format"
+        throw "The matching zip file found in $installDir was of an unknown (non-Broadcaster) format"
     }
-    $zip | Expand-Archive -DestinationPath "$env:HEADS_BroadcasterDir\bin" -Force
+    $zip | Expand-Archive -DestinationPath "$installDir\bin" -Force
     #region Create the Broadcaster service
     Write-Host "> Creating the $serviceName Windows service"
     $out = New-Service @serviceParameters
-    $out = & sc.exe failure "$serviceName" "actions=" "restart/30000/restart/30000//" "reset=" 60
+    $out = & sc.exe failure $serviceName "actions=" "restart/30000/restart/30000//" "reset=" 60
     Write-Host "> The $serviceName service was created"
     #endregion
     #region Start the Broadcaster service
