@@ -1,4 +1,12 @@
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+if (![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
+    Write-Host "This script requires administrator rights, please run again in PowerShell as administrator" -ForegroundColor Red
+    throw
+}
+if (![Environment]::Is64BitOperatingSystem) {
+    Write-Host "This computer is running a 32-bit operating system. This software can only run on 64-bit systems" -ForegroundColor Red
+    throw
+}
 $ErrorActionPreference = "Stop"
 try {
     # Bind some variables
@@ -56,7 +64,8 @@ try {
     $zip = Get-ChildItem "$installDir\*.zip" | Select-Object -first 1
     $version = $zip.ToString().Split("-")[1]
     if ($version) {
-        Write-Host "> Installing Broadcaster version $version"
+        Write-Host "> Installing Broadcaster " -NoNewline
+        Write-Host "v$version" -ForegroundColor Yellow
     }
     else {
         throw "The matching zip file found in $installDir was of an unknown (non-Broadcaster) format"
