@@ -17,6 +17,12 @@ if ($PSVersionTable.PSVersion.Major -lt $requiredPsVersion) {
             Write-Host "> This script requires PowerShell $requiredPsVersion. Please install it and run this script again."
             exit 0
         }
+        $osInfo = Get-WmiObject -Class Win32_OperatingSystem
+        if ($osInfo.ProductType -ne 1) {
+            Write-Host "> This script requires PowerShell $requiredPsVersion. Please install it and run this script again. For instructions, see"
+            Write-Host "https://learn.microsoft.com/powershell/scripting/install/installing-powershell-on-windows" -ForegroundColor Yellow
+            exit 0
+        }
         $interactive = !([bool]([Environment]::GetCommandLineArgs() -like '-noni*'))
         if ($interactive) {
             $response = Yes "> This script requires PowerShell $requiredPsVersion. Do you want to install it now using winget?"
