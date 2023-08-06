@@ -1,3 +1,7 @@
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    return "Install Script Maker requires PowerShell 7 or later"
+}
+
 function Yes
 {
     param($message)
