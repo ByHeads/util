@@ -1,3 +1,6 @@
 #!ps 
-try { irm raw.githubusercontent.com/byheads/util/main/p | iex } catch { echo $_ ; break }
-pwsh { irm raw.githubusercontent.com/byheads/util/main/get-logviewer.ps1 | iex }
+if (![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
+    Write-Host "This script requires administrator rights, please run again in PowerShell as administrator" -ForegroundColor Red
+    throw
+}
+irm raw.githubusercontent.com/byheads/util/main/get-logviewer.ps1 | iex
