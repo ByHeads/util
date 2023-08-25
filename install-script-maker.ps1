@@ -143,7 +143,7 @@ $arr = $script | %{ "{$_}" } | Join-String -Separator ","
 Write-Host
 Write-Host "# Here's your install script! Run it in PowerShell as administrator on a client computer:"
 Write-Host
-Write-Host "`$o=@{He=@{Authorization=`"Bearer $token`"}};`$u=`"$bc/install`";$arr|%{try{&`$_}catch{echo `$_;break}}"
+Write-Host "`$o=@{He=@{Authorization=`"Bearer $token`"}};`$u=`"$bc/install`";$arr|%{try{&`$_}catch{echo `$_;break}};"
 Write-Host
 Write-Host "# End of script"
 Write-Host
