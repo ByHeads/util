@@ -54,17 +54,18 @@ function Collation
     Write-Host "Invalid collation, expected sv-SE, en-GB or nb-NO"
     return Collation $message
 }
+
 function Get-BroadcasterUrl
 {
     param($instr)
     if ($instr) { $instr = " $instr" }
     $input = Read-Host "> Enter the URL or hostname of the Broadcaster$instr"
-    $input = $input.Trim();
+    $input = $input.Trim()
     if ( $input.StartsWith("@")) {
         # Use input as-is
         $input = $input.SubString(1)
     }
-    elseif (!$input.StartsWith("https://")) {
+    elseif (!$input.StartsWith("http")) {
         # Build from a partial URL or conventional hostname
         if ( $input.Contains(".")) {
             # It's a partial URL
@@ -83,8 +84,15 @@ function Get-BroadcasterUrl
         Write-Host "Invalid URI format. Try again."
         return Get-BroadcasterUrl
     }
+
+    if ( $input.StartsWith("http://")) {
+        # Using unencrypted HTTP
+        Write-Host "> You are using an unencrypted Broadcaster connection. Use Ctrl+C to abort..." -ForegroundColor Yellow
+        $PSDefaultParameterValues['Invoke-RestMethod:AllowUnencryptedAuthentication'] = $true
+    }
+
     try {
-        $options = irm $input -Method "OPTIONS" -TimeoutSec 3
+        $options = irm $input -Method "OPTIONS" -TimeoutSec 5
         if (($options.Status -eq "success") -and ($options.Data[0].Resource -eq "RESTable.AvailableResource")) {
             Write-Host "That Broadcaster exists! 🎉" -ForegroundColor Green
             return $input
@@ -103,19 +111,19 @@ Write-Host
 
 $bc = Get-BroadcasterUrl
 $token = Read-Host "> Now enter the install token" -MaskInput
-$script = @()
+$uris = @()
 if (Yes "> Should we first uninstall existing client software, if present?") {
     if (Yes "--> Also uninstall legacy (SUS/RA) client software?") {
-        $script += "irm raw.githubusercontent.com/byheads/util/main/u/legacy|iex"
+        $uris += "'uninstall.legacy'"
     }
-    $script += "irm raw.githubusercontent.com/byheads/util/main/u/all|iex"
+    $uris += "'uninstall.all'"
 }
 if (Yes "> Install Receiver?") {
-    $script += "irm `"`$u/product=Receiver`" @o|iex"
+    $uris += "'install/p=Receiver'"
 }
 $csa = $false
 if (Yes "> Install WpfClient?") {
-    $part = "product=WpfClient"
+    $part = "p=WpfClient"
     if (Yes "--> Install as a manual client?") {
         $label = Label
         $installPath = [System.Uri]::EscapeDataString("C:\ProgramData\Heads\$label")
@@ -125,25 +133,25 @@ if (Yes "> Install WpfClient?") {
     }
     $part += "&usePosServer=" + (Yes "--> Connect client to local POS Server?")
     $part += "&useArchiveServer=" + (Yes "--> Connect client to central Archive Server?")
-    $script += "irm `"`$u/$part`" @o|iex"
+    $uris += "'install/$part'"
 }
 elseif (Yes "> Install CustomerServiceApplication?") {
-    $script += "irm `"`$u/product=CustomerServiceApplication`" @o|iex"
+    $uris += "'install/p=CustomerServiceApplication'"
     $csa = $true
 }
 if (!$csa -and (Yes "> Install POS Server?")) {
-    $part = "product=PosServer"
+    $part = "p=PosServer"
     $part += "&createDump=" + (Yes "--> Create a dump of an existing POS-server?")
     $part += "&collation=" + (Collation "--> Enter database collation, e.g. sv-SE")
     $part += "&databaseImageSize=" + (Num "--> Enter database image size in MB (or enter for 1024)" 1024)
     $part += "&databaseLogSize=" + (Num "--> Enter database log size in MB (or enter for 1024)" 1024)
-    $script += "irm `"`$u/$part`" @o|iex"
+    $uris += "'install/$part'"
 }
-$arr = $script | %{ "{$_}" } | Join-String -Separator ","
+$arr = $uris | Join-String -Separator ","
 Write-Host
 Write-Host "# Here's your install script! Run it in PowerShell as administrator on a client computer:"
 Write-Host
-Write-Host "`$o=@{He=@{Authorization=`"Bearer $token`"}};`$u=`"$bc/install`";$arr|%{try{&`$_}catch{echo `$_;break}};"
+Write-Host "$arr|%{try{irm('$bc/'+`$_)-He @{Authorization='Bearer $token'}|iex}catch{echo `$_;return}};"
 Write-Host
 Write-Host "# End of script"
 Write-Host
