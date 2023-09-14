@@ -26,5 +26,5 @@ pwsh {
     irm https://aka.ms/vs/17/release/vc_redist.x64.exe -OutFile "$bcPath\vcredist\vc_redist.x64.exe"
     Write-Host "> Downloading vcredist x86 from https://aka.ms/vs/17/release/vc_redist.x86.exe"
     irm https://aka.ms/vs/17/release/vc_redist.x86.exe -OutFile "$bcPath\vcredist\vc_redist.x86.exe"
-    Write-Host "Done!"
+    Write-Host "> Done!" -ForegroundColor Green
 }
