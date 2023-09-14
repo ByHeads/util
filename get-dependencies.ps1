@@ -22,9 +22,9 @@ pwsh {
     irm $powershellUrl -o "$bcPath\powershell\$powershellFileName"
     Write-Host "> Downloading bcman.ps1 from https://raw.githubusercontent.com/byheads/bcman/main/bcman.ps1"
     irm raw.githubusercontent.com/byheads/bcman/main/bcman.ps1 -o "$bcPath\bcman\bcman.ps1"
-    Write-Host "> Downloading vcredist x64 from https://aka.ms/vs/17/release/vc_redist.x64.exe"
+    Write-Host "> Downloading Microsoft Visual C++ Redistributable 2015-2022 x64 from https://aka.ms/vs/17/release/vc_redist.x64.exe"
     irm https://aka.ms/vs/17/release/vc_redist.x64.exe -o "$bcPath\vcredist\vc_redist.x64.exe"
-    Write-Host "> Downloading vcredist x86 from https://aka.ms/vs/17/release/vc_redist.x86.exe"
+    Write-Host "> Downloading Microsoft Visual C++ Redistributable 2015-2022 x86 from https://aka.ms/vs/17/release/vc_redist.x86.exe"
     irm https://aka.ms/vs/17/release/vc_redist.x86.exe -o "$bcPath\vcredist\vc_redist.x86.exe"
     Write-Host "> Done!" -ForegroundColor Green
 }
