@@ -1,7 +1,7 @@
 pwsh {
     Write-Host "This script will download:"
     Write-Host
-    Write-Host "- PowerShell 7 installer .msi from it's official Microsoft source"
+    Write-Host "- PowerShell 7 installer from it's official Microsoft source"
     Write-Host "- bcman.ps1 PowerShell source from it's GitHub repo"
     Write-Host "– Visual C++ Redistributable 2015-2022 x64 and x86 installers from the official Microsoft source"
     Write-Host
