@@ -9,11 +9,10 @@ pwsh {
     Write-Host "from where they can be deployed by the Broadcaster to clients"
     Write-Host
     Read-Host "Press Enter to continue or Ctrl+C to abort"
-    Write-Host
     $bcPath = Read-Host "> Enter the Broadaster install directory path"
-    $o = New-Item -Path "$bcPath\bcman" -ItemType Directory
-    $o = New-Item -Path "$bcPath\vcredist" -ItemType Directory
-    $o = New-Item -Path "$bcPath\powershell" -ItemType Directory
+    $o = New-Item -Path "$bcPath\bcman" -ItemType Directory -ErrorAction SilentlyContinue
+    $o = New-Item -Path "$bcPath\vcredist" -ItemType Directory -ErrorAction SilentlyContinue
+    $o = New-Item -Path "$bcPath\powershell" -ItemType Directory -ErrorAction SilentlyContinue
     $powershellUrl = irm https://api.github.com/repos/PowerShell/PowerShell/releases/latest `
     | % { $_.assets } `
     | ? { $_.browser_download_url -like "*win-x64.msi*" } `
