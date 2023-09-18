@@ -14,9 +14,8 @@ $o = ni "$bcPath\bcman" -ItemType Directory -ErrorAction SilentlyContinue
 $o = ni "$bcPath\vcredist" -ItemType Directory -ErrorAction SilentlyContinue
 $o = ni "$bcPath\powershell" -ItemType Directory -ErrorAction SilentlyContinue
 $powershellUrl = irm https://api.github.com/repos/PowerShell/PowerShell/releases/latest `
-      | % { $_.assets } `
-      | ? { $_.browser_download_url -like "*win-x64.msi*" } `
-      | select -exp browser_download_url
+  | % { $_.assets.browser_download_url } `
+  | ? { $_ -like "*win-x64.msi" }
 $powershellFileName = Split-Path -Path $powershellUrl -Leaf
 Write-Host "> Downloading $powershellFileName from $powershellUrl"
 irm $powershellUrl -o "$bcPath\powershell\$powershellFileName"
