@@ -111,6 +111,7 @@ Write-Host
 
 $bc = Get-BroadcasterUrl
 $token = Read-Host "> Now enter the install token" -MaskInput
+$token = $token.Trim()
 $uris = @()
 if (Yes "> Should we first uninstall existing client software, if present?") {
     if (Yes "--> Also uninstall legacy (SUS/RA) client software?") {
