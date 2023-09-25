@@ -55,26 +55,20 @@ function Collation
     return Collation $message
 }
 
-function Get-BroadcasterUrl
+function Get-BroadcasterUrl-Ism
 {
-    param($instr)
-    if ($instr) { $instr = " $instr" }
-    $input = Read-Host "> Enter the URL or hostname of the Broadcaster$instr"
+    $input = Read-Host "> Enter the URL or hostname of the Broadcaster (or 'enter' to use this Broadcaster)"
     $input = $input.Trim()
+    if ($input -eq "") {
+        Write-Host "> Using URL $bcUrl"
+        return $bcUrl
+    }
     if ( $input.StartsWith("@")) {
-        # Use input as-is
         $input = $input.SubString(1)
     }
     elseif (!$input.StartsWith("http")) {
-        # Build from a partial URL or conventional hostname
-        if ( $input.Contains(".")) {
-            # It's a partial URL
-            $input = "https://$input"
-        }
-        else {
-            # It's a hostname
-            $input = "https://broadcaster.$input.heads-api.com"
-        }
+        if ( $input.Contains(".")) { $input = "https://$input" }
+        else { $input = "https://broadcaster.$input.heads-api.com" }
     }
     if (!$input.EndsWith("/api")) {
         $input += "/api"
@@ -84,13 +78,10 @@ function Get-BroadcasterUrl
         Write-Host "Invalid URI format. Try again."
         return Get-BroadcasterUrl
     }
-
     if ( $input.StartsWith("http://")) {
-        # Using unencrypted HTTP
         Write-Host "> You are using an unencrypted Broadcaster connection. Use Ctrl+C to abort..." -ForegroundColor Yellow
         $PSDefaultParameterValues['Invoke-RestMethod:AllowUnencryptedAuthentication'] = $true
     }
-
     try {
         $options = irm $input -Method "OPTIONS" -TimeoutSec 5
         if (($options.Status -eq "success") -and ($options.Data[0].Resource -eq "RESTable.AvailableResource")) {
@@ -109,7 +100,11 @@ Write-Host -NoNewline "To quit at any time, press "
 Write-Host -ForegroundColor Yellow "Ctrl+C"
 Write-Host
 
-$bc = Get-BroadcasterUrl
+$bcUrl = Get-BroadcasterUrl-Ism
+$hosted = $bcUrl.Contains("heads-api.com") -or $bcUrl.Contains("heads-app.com")
+if ($hosted) {
+    Write-Host "> This BC is hosted by Heads. If an error occur during install, IP diagnostics will be included in the output"
+}
 $token = Read-Host "> Now enter the install token" -MaskInput
 $token = $token.Trim()
 $uris = @()
@@ -149,10 +144,14 @@ if (!$csa -and (Yes "> Install POS Server?")) {
     $uris += "'install/$part'"
 }
 $arr = $uris | Join-String -Separator ","
+$ip = ""
+if ($hosted) {
+    $ip = "@`$(irm icanhazip.com)"
+}
 Write-Host
 Write-Host "# Here's your install script! Run it in PowerShell as administrator on a client computer:"
 Write-Host
-Write-Host "$arr|%{try{irm('$bc/'+`$_)-He @{Authorization='Bearer $token'}|iex}catch{echo `$_;return}};"
+Write-Host "$arr|%{try{`$u='$bcUrl/'+`$_;irm(`$u)-He @{Authorization='Bearer $token'}|iex}catch{throw `"`$u|`$(hostname)$ip`$_`"}};"
 Write-Host
 Write-Host "# End of script"
 Write-Host
