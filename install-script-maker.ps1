@@ -103,7 +103,7 @@ Write-Host
 $bcUrl = Get-BroadcasterUrl-Ism
 $hosted = $bcUrl.Contains("heads-api.com") -or $bcUrl.Contains("heads-app.com")
 if ($hosted) {
-    Write-Host "> This BC is hosted by Heads. If an error occur during install, IP diagnostics will be included in the output"
+    Write-Host "> The URI has the format of a Heads-hosted Broadcaster. If an error occurs during install, IP diagnostics will be included in the output"
 }
 $token = Read-Host "> Now enter the install token" -MaskInput
 $token = $token.Trim()
@@ -144,14 +144,14 @@ if (!$csa -and (Yes "> Install POS Server?")) {
     $uris += "'install/$part'"
 }
 $arr = $uris | Join-String -Separator ","
-$ip = ""
+$ip = "+'|'"
 if ($hosted) {
-    $ip = "@`$(irm icanhazip.com)"
+    $ip = "+'@'+`$(irm('icanhazip.com'))"
 }
 Write-Host
 Write-Host "# Here's your install script! Run it in PowerShell as administrator on a client computer:"
 Write-Host
-Write-Host "$arr|%{try{`$u='$bcUrl/'+`$_;irm(`$u)-He @{Authorization='Bearer $token'}|iex}catch{throw `"`$u|`$(hostname)$ip`$_`"}};"
+Write-Host "$arr|%{try{`$u='$bcUrl/'+`$_;irm(`$u)-He:@{Authorization='Bearer'+[char]0x0020+'$token'}|iex}catch{throw(`$u+'|'+`$(hostname)$ip+`$_)}};"
 Write-Host
 Write-Host "# End of script"
 Write-Host
