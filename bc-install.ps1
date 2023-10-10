@@ -58,7 +58,11 @@ try {
     }
     # Clear the existing \bin directory, if any
     if (Test-Path "$installDir\bin") {
-        rm -r -fo "$installDir\bin"
+        for($i = 0; $i -lt 1000; $i++)
+        {
+            try { rm -r -fo "$installDir\bin"; break }
+            catch { Start-Sleep -Seconds 1; continue }
+        }
     }
     # Expand the zip file to the bin directory
     $zip = Get-ChildItem "$installDir\*.zip" | Select-Object -first 1
