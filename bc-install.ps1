@@ -56,6 +56,10 @@ try {
     if ((Get-ChildItem "$installDir\appsettings.json" | Measure-Object).Count -eq 0) {
         throw "Broadcaster installation failed: Expected an appsettings.json file in the Broadcaster directory ($installDir). See the docs for how to create an appsettings.json file"
     }
+    # Validate JSON syntax of appsettings file
+    try { Get-Content "$installDir\appsettings.json" -Raw | ConvertFrom-Json | Out-Null }
+    catch { throw "Broadcaster installation failed: The appsettings.json file in the Broadcaster directory ($installDir) is not valid JSON. $_" }
+
     # Clear the existing \bin directory, if any
     if (Test-Path "$installDir\bin") {
         for($i = 0; $i -lt 1000; $i++)
