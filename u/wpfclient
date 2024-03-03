@@ -1,3 +1,0 @@
-#!ps
-try { irm raw.githubusercontent.com/byheads/util/main/p | iex } catch { echo $_ ; break }
-pwsh { irm raw.githubusercontent.com/byheads/util/main/u/src/uninstall-wpf-client.ps1 | iex }
