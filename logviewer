@@ -18,5 +18,5 @@ if (!$newestLogFile) {
     Write-Host "You don't have any starcounter log files in C:\ProgramData\Heads\POSServer\bin\Server"
     return
 }
-Write-Host "Starting with log file $( $newestLogFile.Name )"
+Write-Host "Starting with log file $( $newestLogFile.FullName )"
 & C:\ProgramData\Heads\LogViewer\Starcounter.LogViewer.exe $newestLogFile.FullName
